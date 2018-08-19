@@ -121,18 +121,6 @@
 //!
 //! Note: currently only solid color fill is supported for text.
 
-#[inline(always)]
-/// Converts degrees to radians.
-pub fn deg_to_rad(deg: f32) -> f32 {
-    unimplemented!();
-}
-
-#[inline(always)]
-/// Converts radians to degrees.
-pub fn rad_to_deg(rad: f32) -> f32 {
-    unimplemented!();
-}
-
 pub mod math;
 
 use math::*;

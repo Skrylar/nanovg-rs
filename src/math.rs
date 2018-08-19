@@ -1,3 +1,4 @@
+//! NOTE degree/radian functions removed because std already has `to_degrees` and `to_radians`.
 
 /// A 2x3 matrix is represented as float[6].
 #[derive(Debug, Clone, Copy)]
