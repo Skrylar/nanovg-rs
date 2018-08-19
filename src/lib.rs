@@ -1,3 +1,5 @@
+#![allow(unused_variables)]
+
 // Ported to Rust 2018 by Joshua Cearley joshua.cearley@gmail.com
 // Copyright (c) 2013 Mikko Mononen memon@inside.org
 //
@@ -362,31 +364,31 @@ pub enum CompositeOperation {
 }
 
 pub struct CompositeOperationState {
-    srcRGB:   isize,
-    dstRGB:   isize,
-    srcAlpha: isize,
-    dstAlpha: isize,
+    pub src_rgb:   isize,
+    pub dst_rgb:   isize,
+    pub src_alpha: isize,
+    pub dst_alpha: isize,
 }
 
 pub struct GlyphPosition<'a> {
     /// Position of the glyph in the input string.
-    glyph: &'a str,
+    pub glyph: &'a str,
     /// The x-coordinate of the logical glyph position.
-    x:     f32,
+    pub x:     f32,
     /// The bounds of the glyph shape.
-    minx:  f32,
+    pub minx:  f32,
     /// The bounds of the glyph shape.
-    maxx:  f32,
+    pub maxx:  f32,
 }
 
 pub struct TextRow<'a> {
     /// Text from the input string.
-    span: &'a str,
+    pub span: &'a str,
     /// Logical width of the row.
-    width:    f32,
+    pub width:    f32,
     /// Actual bounds of the row. Logical width and bounds can differ because of kerning and some parts over extending.
-    minx:     f32,
-    maxx:     f32,
+    pub minx:     f32,
+    pub maxx:     f32,
 }
 
 pub enum ImageFlags {
@@ -417,144 +419,144 @@ pub trait Context {
     /// window size and frame buffer size. In that case you would set
     /// windowWidth/Height to the window size devicePixelRatio to:
     /// frameBufferWidth / windowWidth.
-    fn BeginFrame(&mut self, windowWidth: f32, windowHeight: f32, devicePixelRatio: f32);
+    fn begin_frame(&mut self, window_width: f32, window_height: f32, device_pixel_ratio: f32);
 
     /// Cancels drawing the current frame.
-    fn CancelFrame(&mut self);
+    fn cancel_frame(&mut self);
 
     /// Ends drawing flushing remaining render state.
-    fn EndFrame(&mut self);
+    fn end_frame(&mut self);
 
     /// Sets the composite operation.
-    fn GlobalCompositeOperation(&mut self, op: CompositeOperation);
+    fn global_composite_operation(&mut self, op: CompositeOperation);
 
     /// Sets the composite operation with custom pixel arithmetic.
-    fn GlobalCompositeBlendFunc(&mut self, sfactor: BlendFactor, dfactor: BlendFactor);
+    fn global_composite_blend_func(&mut self, sfactor: BlendFactor, dfactor: BlendFactor);
 
     /// Sets the composite operation with custom pixel arithmetic for RGB and alpha components separately. The parameters should be one of NVGblendFactor.
-    fn GlobalCompositeBlendFuncSeparate(&mut self, srcRGB: isize, dstRGB: isize, srcAlpha: isize, dstAlpha: isize);
+    fn global_composite_blend_func_separate(&mut self, src_r_g_b: isize, dst_r_g_b: isize, src_alpha: isize, dst_alpha: isize);
 
     /// Pushes and saves the current render state into a state stack.
     /// A matching nvgRestore() must be used to restore the state.
-    fn Save(&mut self);
+    fn save(&mut self);
 
     /// Pops and restores current render state.
-    fn Restore(&mut self);
+    fn restore(&mut self);
 
     /// Resets current render state to default values. Does not affect the render state stack.
-    fn Reset(&mut self);
+    fn reset(&mut self);
 
     /// Sets whether to draw antialias for nvgStroke() and nvgFill(). It's enabled by default.
-    fn ShapeAntiAlias(&mut self, enabled: bool);
+    fn shape_anti_alias(&mut self, enabled: bool);
 
     /// Sets current stroke style to a solid color.
-    fn StrokeColor(&mut self, color: Color);
+    fn stroke_color(&mut self, color: Color);
 
     /// Sets current stroke style to a paint, which can be a one of the gradients or a pattern.
-    fn StrokePaint(&mut self, paint: Paint);
+    fn stroke_paint(&mut self, paint: Paint);
 
     /// Sets current fill style to a solid color.
-    fn FillColor(&mut self, color: Color);
+    fn fill_color(&mut self, color: Color);
 
     /// Sets current fill style to a paint, which can be a one of the gradients or a pattern.
-    fn FillPaint(&mut self, paint: Paint);
+    fn fill_paint(&mut self, paint: Paint);
 
     /// Sets the miter limit of the stroke style.
     /// Miter limit controls when a sharp corner is beveled.
-    fn MiterLimit(&mut self, limit: f32);
+    fn miter_limit(&mut self, limit: f32);
 
     /// Sets the stroke width of the stroke style.
-    fn StrokeWidth(&mut self, size: f32);
+    fn stroke_width(&mut self, size: f32);
 
     /// Sets how the end of the line (cap) is drawn,
     /// Can be one of: NVG_BUTT (default), NVG_ROUND, NVG_SQUARE.
-    fn LineCap(&mut self, cap: LineCap);
+    fn line_cap(&mut self, cap: LineCap);
 
     /// Sets how sharp path corners are drawn.
     /// Can be one of NVG_MITER (default), NVG_ROUND, NVG_BEVEL.
-    fn LineJoin(&mut self, join: LineJoin);
+    fn line_join(&mut self, join: LineJoin);
 
     /// Sets the transparency applied to all rendered shapes.
     /// Already transparent paths will get proportionally more transparent as well.
-    fn GlobalAlpha(&mut self, alpha: f32);
+    fn global_alpha(&mut self, alpha: f32);
 
     /// Resets current transform to a identity matrix.
-    fn ResetTransform(&mut self);
+    fn reset_transform(&mut self);
 
     /// Premultiplies current coordinate system by specified matrix.
     /// The parameters are interpreted as matrix as follows:
     ///   [a c e]
     ///   [b d f]
     ///   [0 0 1]
-    fn Transform(&mut self, a: f32, b: f32, c: f32, d: f32, e: f32, f: f32);
+    fn transform(&mut self, a: f32, b: f32, c: f32, d: f32, e: f32, f: f32);
 
     /// Translates current coordinate system.
-    fn Translate(&mut self, x: f32, y: f32);
+    fn translate(&mut self, x: f32, y: f32);
 
     /// Rotates current coordinate system. Angle is specified in radians.
-    fn Rotate(&mut self, angle: f32);
+    fn rotate(&mut self, angle: f32);
 
     /// Skews the current coordinate system along X axis. Angle is specified in radians.
-    fn SkewX(&mut self, angle: f32);
+    fn skew_x(&mut self, angle: f32);
 
     /// Skews the current coordinate system along Y axis. Angle is specified in radians.
-    fn SkewY(&mut self, angle: f32);
+    fn skew_y(&mut self, angle: f32);
 
     /// Scales the current coordinate system.
-    fn Scale(&mut self, x: f32, y: f32);
+    fn scale(&mut self, x: f32, y: f32);
 
     /// Stores the top part (a-f) of the current transformation matrix in to the specified buffer.
     ///   [a c e]
     ///   [b d f]
     ///   [0 0 1]
-    fn CurrentTransform(&self) -> Transform;
+    fn current_transform(&self) -> Transform;
 
     /// Creates image by loading it from the disk from specified file name.
     /// Returns handle to the image.
-    fn CreateImage(&mut self, filename: &str, imageFlags: isize) -> isize;
+    fn create_image(&mut self, filename: &str, image_flags: isize) -> isize;
 
     /// Creates image by loading it from the specified chunk of memory.
     /// Returns handle to the image.
-    fn CreateImageMem(&mut self, imageFlags: isize, data: &[u8]) -> isize;
+    fn create_image_mem(&mut self, image_flags: isize, data: &[u8]) -> isize;
 
     /// Creates image from specified image data.
     /// Returns handle to the image.
-    fn CreateImageRGBA(&mut self, w: isize, h: isize, imageFlags: isize, data: &[u8]) -> isize;
+    fn create_image_r_g_b_a(&mut self, w: isize, h: isize, image_flags: isize, data: &[u8]) -> isize;
 
     /// Updates image data specified by image handle.
-    fn UpdateImage(&mut self, image: isize, data: &[u8]);
+    fn update_image(&mut self, image: isize, data: &[u8]);
 
     /// Returns the width and height of a created image.
-    fn ImageSize(&mut self, image: isize) -> (usize, usize);
+    fn image_size(&mut self, image: isize) -> (usize, usize);
 
     /// Deletes created image.
-    fn DeleteImage(&mut self, image: isize);
+    fn delete_image(&mut self, image: isize);
 
     /// Creates and returns a linear gradient. Parameters (sx,sy)-(ex,ey) specify the start and end coordinates
     /// of the linear gradient, icol specifies the start color and ocol the end color.
     /// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-    fn LinearGradient(&mut self, sx: f32, sy: f32, ex: f32, ey: f32, icol: Color, ocol: Color) -> Paint;
+    fn linear_gradient(&mut self, sx: f32, sy: f32, ex: f32, ey: f32, icol: Color, ocol: Color) -> Paint;
 
     /// Creates and returns a box gradient. Box gradient is a feathered rounded rectangle, it is useful for rendering
     /// drop shadows or highlights for boxes. Parameters (x,y) define the top-left corner of the rectangle,
     /// (w,h) define the size of the rectangle, r defines the corner radius, and f feather. Feather defines how blurry
     /// the border of the rectangle is. Parameter icol specifies the inner color and ocol the outer color of the gradient.
     /// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-    fn BoxGradient(&mut self, x: f32, y: f32, w: f32, h: f32, r: f32, f: f32, icol: Color, ocol: Color) -> Paint;
+    fn box_gradient(&mut self, x: f32, y: f32, w: f32, h: f32, r: f32, f: f32, icol: Color, ocol: Color) -> Paint;
 
     /// Creates and returns a radial gradient. Parameters (cx,cy) specify the center, inr and outr specify
     /// the inner and outer radius of the gradient, icol specifies the start color and ocol the end color.
     /// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-    fn RadialGradient(&mut self, cx: f32, cy: f32, inr: f32, outr: f32, icol: Color, ocol: Color) -> Paint;
+    fn radial_gradient(&mut self, cx: f32, cy: f32, inr: f32, outr: f32, icol: Color, ocol: Color) -> Paint;
 
     /// Creates and returns an image pattern. Parameters (ox,oy) specify the left-top location of the image pattern,
     /// (ex,ey) the size of one image, angle rotation around the top-left corner, image is handle to the image to render.
     /// The gradient is transformed by the current transform when it is passed to nvgFillPaint() or nvgStrokePaint().
-    fn ImagePattern(&mut self, ox: f32, oy: f32, ex: f32, ey: f32, angle: f32, image: isize, alpha: f32) -> Paint;
+    fn image_pattern(&mut self, ox: f32, oy: f32, ex: f32, ey: f32, angle: f32, image: isize, alpha: f32) -> Paint;
 
     /// Sets the current scissor rectangle.
     /// The scissor rectangle is transformed by the current transform.
-    fn Scissor(&mut self, x: f32, y: f32, w: f32, h: f32);
+    fn scissor(&mut self, x: f32, y: f32, w: f32, h: f32);
 
     /// Intersects current scissor rectangle with the specified rectangle.
     /// The scissor rectangle is transformed by the current transform.
@@ -562,130 +564,130 @@ pub trait Context {
     /// the current one, the intersection will be done between the specified
     /// rectangle and the previous scissor rectangle transformed in the current
     /// transform space. The resulting shape is always rectangle.
-    fn IntersectScissor(&mut self, x: f32, y: f32, w: f32, h: f32);
+    fn intersect_scissor(&mut self, x: f32, y: f32, w: f32, h: f32);
 
     /// Reset and disables scissoring.
-    fn ResetScissor(&mut self);
+    fn reset_scissor(&mut self);
 
     /// Clears the current path and sub-paths.
-    fn BeginPath(&mut self);
+    fn begin_path(&mut self);
 
     /// Starts new sub-path with specified point as first point.
-    fn MoveTo(&mut self, x: f32, y: f32);
+    fn move_to(&mut self, x: f32, y: f32);
 
     /// Adds line segment from the last point in the path to the specified point.
-    fn LineTo(&mut self, x: f32, y: f32);
+    fn line_to(&mut self, x: f32, y: f32);
 
     /// Adds cubic bezier segment from last point in the path via two control points to the specified point.
-    fn BezierTo(&mut self, c1x: f32, c1y: f32, c2x: f32, c2y: f32, x: f32, y: f32);
+    fn bezier_to(&mut self, c1x: f32, c1y: f32, c2x: f32, c2y: f32, x: f32, y: f32);
 
     /// Adds quadratic bezier segment from last point in the path via a control point to the specified point.
-    fn QuadTo(&mut self, cx: f32, cy: f32, x: f32, y: f32);
+    fn quad_to(&mut self, cx: f32, cy: f32, x: f32, y: f32);
 
     /// Adds an arc segment at the corner defined by the last path point, and two specified points.
-    fn ArcTo(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, radius: f32);
+    fn arc_to(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, radius: f32);
 
     /// Closes current sub-path with a line segment.
-    fn ClosePath(&mut self);
+    fn close_path(&mut self);
 
     /// Sets the current sub-path winding, see NVGwinding and NVGsolidity.
-    fn PathWinding(&mut self, dir: Winding);
+    fn path_winding(&mut self, dir: Winding);
 
     /// Creates new circle arc shaped sub-path. The arc center is at cx,cy, the arc radius is r,
     /// and the arc is drawn from angle a0 to a1, and swept in direction dir (NVG_CCW, or NVG_CW).
     /// Angles are specified in radians.
-    fn Arc(&mut self, cx: f32, cy: f32, r: f32, a0: f32, a1: f32, dir: Winding);
+    fn arc(&mut self, cx: f32, cy: f32, r: f32, a0: f32, a1: f32, dir: Winding);
 
     /// Creates new rectangle shaped sub-path.
-    fn Rect(&mut self, x: f32, y: f32, w: f32, h: f32);
+    fn rect(&mut self, x: f32, y: f32, w: f32, h: f32);
 
     /// Creates new rounded rectangle shaped sub-path.
-    fn RoundedRect(&mut self, x: f32, y: f32, w: f32, h: f32, r: f32);
+    fn rounded_rect(&mut self, x: f32, y: f32, w: f32, h: f32, r: f32);
 
     /// Creates new rounded rectangle shaped sub-path with varying radii for each corner.
-    fn RoundedRectVarying(&mut self, x: f32, y: f32, w: f32, h: f32, radTopLeft: f32, radTopRight: f32, radBottomRight: f32, radBottomLeft: f32);
+    fn rounded_rect_varying(&mut self, x: f32, y: f32, w: f32, h: f32, rad_top_left: f32, rad_top_right: f32, rad_bottom_right: f32, rad_bottom_left: f32);
 
     /// Creates new ellipse shaped sub-path.
-    fn Ellipse(&mut self, cx: f32, cy: f32, rx: f32, ry: f32);
+    fn ellipse(&mut self, cx: f32, cy: f32, rx: f32, ry: f32);
 
     /// Creates new circle shaped sub-path.
-    fn Circle(&mut self, cx: f32, cy: f32, r: f32);
+    fn circle(&mut self, cx: f32, cy: f32, r: f32);
 
     /// Fills the current path with current fill style.
-    fn Fill(&mut self);
+    fn fill(&mut self);
 
     /// Fills the current path with current stroke style.
-    fn Stroke(&mut self);
+    fn stroke(&mut self);
 
 
 
     /// Creates font by loading it from the disk from specified file name.
     /// Returns handle to the font.
-    fn CreateFont(&mut self, name: &str, filename: &str) -> isize;
+    fn create_font(&mut self, name: &str, filename: &str) -> isize;
 
     /// Creates font by loading it from the specified memory chunk.
     /// Returns handle to the font.
-    fn CreateFontMem(&mut self, name: &str, data: &[u8], ndata: isize, freeData: isize) -> isize;
+    fn create_font_mem(&mut self, name: &str, data: &[u8], ndata: isize, free_data: isize) -> isize;
 
     /// Finds a loaded font of specified name, and returns handle to it, or -1 if the font is not found.
-    fn FindFont(&mut self, name: &str) -> isize;
+    fn find_font(&mut self, name: &str) -> isize;
 
     /// Adds a fallback font by handle.
-    fn AddFallbackFontId(&mut self, baseFont: isize, fallbackFont: isize) -> isize;
+    fn add_fallback_font_id(&mut self, base_font: isize, fallback_font: isize) -> isize;
 
     /// Adds a fallback font by name.
-    fn AddFallbackFont(&mut self, baseFont: &str, fallbackFont: &str) -> isize;
+    fn add_fallback_font(&mut self, base_font: &str, fallback_font: &str) -> isize;
 
     /// Sets the font size of current text style.
-    fn FontSize(&mut self, size: f32);
+    fn font_size(&mut self, size: f32);
 
     /// Sets the blur of current text style.
-    fn FontBlur(&mut self, blur: f32);
+    fn font_blur(&mut self, blur: f32);
 
     /// Sets the letter spacing of current text style.
-    fn TextLetterSpacing(&mut self, spacing: f32);
+    fn text_letter_spacing(&mut self, spacing: f32);
 
     /// Sets the proportional line height of current text style. The line height is specified as multiple of font size.
-    fn TextLineHeight(&mut self, lineHeight: f32);
+    fn text_line_height(&mut self, line_height: f32);
 
     /// Sets the text align of current text style, see NVGalign for options.
-    fn TextAlign(&mut self, align: Align);
+    fn text_align(&mut self, align: Align);
 
     /// Sets the font face based on specified id of current text style.
-    fn FontFaceId(&mut self, font: isize);
+    fn font_face_id(&mut self, font: isize);
 
     /// Sets the font face based on specified name of current text style.
-    fn FontFace(&mut self, font: &str);
+    fn font_face(&mut self, font: &str);
 
     /// Draws text string at specified location. If end is specified only the sub-string up to the end is drawn.
-    fn Text(&mut self, x: f32, y: f32, span: &str) -> f32;
+    fn text(&mut self, x: f32, y: f32, span: &str) -> f32;
 
     /// Draws multi-line text string at specified location wrapped at the specified width. If end is specified only the sub-string up to the end is drawn.
     /// White space is stripped at the beginning of the rows, the text is split at word boundaries or when new-line characters are encountered.
     /// Words longer than the max width are slit at nearest character (i.e. no hyphenation).
-    fn TextBox(&mut self, x: f32, y: f32, breakRowWidth: f32, span: &str);
+    fn text_box(&mut self, x: f32, y: f32, break_row_width: f32, span: &str);
 
     /// Measures the specified text string. Parameter bounds should be a pointer to float[4] -> f32;
     /// if the bounding box of the text should be returned. The bounds value are [xmin,ymin, xmax,ymax]
     /// Returns the horizontal advance of the measured text (i.e. where the next character should drawn).
     /// Measured values are returned in local coordinate space.
-    fn TextBounds(&mut self, x: f32, y: f32, span: &str, bounds: &mut f32) -> f32;
+    fn text_bounds(&mut self, x: f32, y: f32, span: &str, bounds: &mut f32) -> f32;
 
     /// Measures the specified multi-text string. Parameter bounds should be a pointer to float[4],
     /// if the bounding box of the text should be returned. The bounds value are [xmin,ymin, xmax,ymax]
     /// Measured values are returned in local coordinate space.
-    fn TextBoxBounds(&mut self, x: f32, y: f32, breakRowWidth: f32, span: &str, bounds: &mut f32);
+    fn text_box_bounds(&mut self, x: f32, y: f32, break_row_width: f32, span: &str, bounds: &mut f32);
 
     /// Calculates the glyph x positions of the specified text. If end is specified only the sub-string will be used.
     /// Measured values are returned in local coordinate space.
-    fn TextGlyphPositionsInto(&mut self, x: f32, y: f32, span: &str, vec: &mut Vec<GlyphPosition>);
+    fn text_glyph_positions_into(&mut self, x: f32, y: f32, span: &str, vec: &mut Vec<GlyphPosition>);
 
     /// Returns the vertical metrics based on the current text style.
     /// Measured values are returned in local coordinate space.
-    fn TextMetrics(&mut self, ascender: &mut f32, descender: &mut f32, lineh: &mut f32);
+    fn text_metrics(&mut self, ascender: &mut f32, descender: &mut f32, lineh: &mut f32);
 
     /// Breaks the specified text into lines. If end is specified only the sub-string will be used.
     /// White space is stripped at the beginning of the rows, the text is split at word boundaries or when new-line characters are encountered.
     /// Words longer than the max width are slit at nearest character (i.e. no hyphenation).
-    fn TextBreakLines(&mut self, span: &str, breakRowWidth: f32, rows: &mut Vec<TextRow>) -> isize;
+    fn text_break_lines(&mut self, span: &str, break_row_width: f32, rows: &mut Vec<TextRow>) -> isize;
 }
